@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 
 class RecipeDetailScreen extends StatefulWidget {
   final String name;
@@ -26,7 +25,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('¡Has calificado esta receta con ${rating.toString()} estrellas!'),
+        content: Text('¡Has calificado esta receta con ${rating.toStringAsFixed(1)} estrellas!'),
       ),
     );
   }
@@ -37,51 +36,63 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
   Widget _buildImage(String imagePath) {
     if (_isAssetImage(imagePath)) {
-      // Imágenes cargadas desde assets
       return Image.asset(
         imagePath,
         width: double.infinity,
         height: 250,
         fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _placeholderImage();
+        },
       );
     } else {
-      // Imágenes cargadas como URL o base64 (Flutter Web compatible)
       return Image.network(
         imagePath,
         width: double.infinity,
         height: 250,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) {
-          return const Icon(
-            Icons.broken_image,
-            size: 250,
-            color: Colors.grey,
-          );
+          return _placeholderImage();
         },
       );
     }
+  }
+
+  Widget _placeholderImage() {
+    return Container(
+      width: double.infinity,
+      height: 250,
+      color: Colors.grey[300],
+      child: const Center(
+        child: Icon(
+          Icons.broken_image,
+          size: 100,
+          color: Colors.grey,
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.name),
+        title: Text(widget.name.isNotEmpty ? widget.name : 'Receta sin título'),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 📸 **Imagen de la Receta**
+            // 📸 Imagen de la receta
             _buildImage(widget.image),
 
             const SizedBox(height: 20),
 
-            // 📛 **Nombre de la Receta**
+            // 📛 Nombre de la receta
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                widget.name,
+                widget.name.isNotEmpty ? widget.name : 'Sin título',
                 style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -91,7 +102,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
             const SizedBox(height: 10),
 
-            // 📝 **Instrucciones**
+            // 📝 Instrucciones
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: const Text(
@@ -105,7 +116,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
-                widget.instructions,
+                widget.instructions.isNotEmpty
+                    ? widget.instructions
+                    : 'No se proporcionaron instrucciones para esta receta.',
                 style: const TextStyle(fontSize: 16),
               ),
             ),
@@ -113,7 +126,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             const SizedBox(height: 20),
             const Divider(),
 
-            // ⭐ **Sistema de Puntuación**
+            // ⭐ Sistema de calificación
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: const Text(
@@ -123,20 +136,30 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             ),
             const SizedBox(height: 10),
             Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (index) {
-                  return IconButton(
-                    icon: Icon(
-                      index < _rating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 32,
-                    ),
-                    onPressed: () {
-                      _rateRecipe(index + 1.0);
-                    },
-                  );
-                }),
+              child: Column(
+                children: [
+                  // Visualización de estrellas
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return IconButton(
+                        icon: Icon(
+                          index < _rating ? Icons.star : Icons.star_border,
+                          color: Colors.amber,
+                          size: 32,
+                        ),
+                        onPressed: () {
+                          _rateRecipe(index + 1.0);
+                        },
+                      );
+                    }),
+                  ),
+                  // Puntuación actual
+                  Text(
+                    'Calificación actual: ${_rating.toStringAsFixed(1)} estrellas',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
               ),
             ),
 

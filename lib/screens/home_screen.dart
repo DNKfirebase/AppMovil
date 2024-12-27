@@ -7,6 +7,14 @@ class HomeScreen extends StatelessWidget {
 
   const HomeScreen({Key? key, required this.updateTheme}) : super(key: key);
 
+  void _navigateTo(BuildContext context, Widget screen) {
+    Navigator.pop(context); // Cierra el Drawer
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,6 +24,7 @@ class HomeScreen extends StatelessWidget {
       drawer: Drawer(
         child: ListView(
           children: [
+            // Encabezado del Drawer
             DrawerHeader(
               decoration: const BoxDecoration(
                 color: Colors.blueAccent,
@@ -27,50 +36,52 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            // Opción: Inicio
             ListTile(
+              leading: const Icon(Icons.home, color: Colors.blueAccent),
               title: const Text('Inicio'),
               onTap: () {
-                Navigator.pop(context); // Cierra el Drawer
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RecipesScreen()),
-                );
+                _navigateTo(context, const RecipesScreen());
               },
             ),
+            // Opción: Contacto
             ListTile(
+              leading: const Icon(Icons.contact_mail, color: Colors.blueAccent),
               title: const Text('Contacto'),
               onTap: () {
-                Navigator.pop(context); // Cierra el Drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ContactScreen()),
-                );
+                _navigateTo(context, const ContactScreen());
               },
             ),
+            // Separador
+            const Divider(),
+            // Opción: Configuración
             ListTile(
+              leading: const Icon(Icons.settings, color: Colors.blueAccent),
               title: const Text('Configuración'),
               onTap: () {
                 Navigator.pop(context); // Cierra el Drawer
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('Configuración'),
+                    title: const Text('Configuración de Tema'),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
+                        ListTile(
+                          leading: const Icon(Icons.light_mode, color: Colors.orange),
+                          title: const Text('Modo Claro'),
+                          onTap: () {
                             updateTheme(ThemeMode.light);
                             Navigator.pop(context); // Cierra el diálogo
                           },
-                          child: const Text('Modo Claro'),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
+                        ListTile(
+                          leading: const Icon(Icons.dark_mode, color: Colors.blueGrey),
+                          title: const Text('Modo Oscuro'),
+                          onTap: () {
                             updateTheme(ThemeMode.dark);
                             Navigator.pop(context); // Cierra el diálogo
                           },
-                          child: const Text('Modo Oscuro'),
                         ),
                       ],
                     ),

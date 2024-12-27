@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io' show File;
 import 'dart:typed_data'; // Para manejar imágenes en Flutter Web
-import 'dart:html' as html; // Para Flutter Web
 
 class UploadRecipeScreen extends StatefulWidget {
   final Function(Map<String, String>) onRecipeAdded;
@@ -36,24 +35,15 @@ class _UploadRecipeScreenState extends State<UploadRecipeScreen> {
 
   // Función para seleccionar imagen
   Future<void> _pickImage() async {
-    // Verifica si estás en Web o en otra plataforma
     if (kIsWeb) {
-      // Flutter Web: Usa un selector de archivos
-      final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-      uploadInput.accept = 'image/*';
-      uploadInput.click();
-      uploadInput.onChange.listen((event) {
-        final file = uploadInput.files?.first;
-        final reader = html.FileReader();
-        reader.readAsArrayBuffer(file!);
-        reader.onLoadEnd.listen((event) {
-          setState(() {
-            webImage = reader.result as Uint8List;
-          });
+      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        final bytes = await pickedFile.readAsBytes();
+        setState(() {
+          webImage = bytes;
         });
-      });
+      }
     } else {
-      // Flutter móvil: Usa ImagePicker
       final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
@@ -96,88 +86,85 @@ class _UploadRecipeScreenState extends State<UploadRecipeScreen> {
       appBar: AppBar(
         title: const Text('Subir Receta'),
       ),
-      body: SingleChildScrollView(
+      body: ListView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Nombre de la Receta',
-                border: OutlineInputBorder(),
+        children: [
+          TextField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              labelText: 'Nombre de la Receta',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            value: selectedCategory,
+            items: categories.map((category) {
+              return DropdownMenuItem(
+                value: category,
+                child: Text(category),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedCategory = value!;
+              });
+            },
+            decoration: const InputDecoration(
+              labelText: 'Categoría',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: _pickImage,
+            icon: const Icon(Icons.image),
+            label: const Text('Seleccionar Imagen'),
+          ),
+          if (selectedImage != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Image.file(
+                selectedImage!,
+                height: 150,
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              value: selectedCategory,
-              items: categories.map((category) {
-                return DropdownMenuItem(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedCategory = value!;
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: 'Categoría',
-                border: OutlineInputBorder(),
+          if (webImage != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Image.memory(
+                webImage!,
+                height: 150,
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              onPressed: _pickImage,
-              icon: const Icon(Icons.image),
-              label: const Text('Seleccionar Imagen'),
+          const SizedBox(height: 12),
+          TextField(
+            controller: ingredientsController,
+            decoration: const InputDecoration(
+              labelText: 'Ingredientes',
+              border: OutlineInputBorder(),
             ),
-            if (selectedImage != null) // Para móviles
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Image.file(
-                  selectedImage!,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            if (webImage != null) // Para Web
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Image.memory(
-                  webImage!,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: ingredientsController,
-              decoration: const InputDecoration(
-                labelText: 'Ingredientes',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
+            maxLines: 3,
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: instructionsController,
+            decoration: const InputDecoration(
+              labelText: 'Instrucciones',
+              border: OutlineInputBorder(),
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: instructionsController,
-              decoration: const InputDecoration(
-                labelText: 'Instrucciones',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 4,
+            maxLines: 4,
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: _uploadRecipe,
+              child: const Text('Subir Receta'),
             ),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: _uploadRecipe,
-                child: const Text('Subir Receta'),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

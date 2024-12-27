@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:testapp/servicios/register.dart'; // Asegúrate de que la ruta sea correcta.
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -11,71 +10,108 @@ class RegisterScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
         title: const Text(
-          'Crear Cuenta',
+          'Registrar Usuario',
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Agregar un ícono o imagen de bienvenida
-            const Icon(
-              Icons.person_add_alt_1,
+        children: [
+          const SizedBox(height: 20),
+          const Icon(
+            Icons.person_add,
+            size: 100,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Crea tu cuenta',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
               color: Colors.white,
-              size: 100,
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'Bienvenido',
+          ),
+          const SizedBox(height: 40),
+          TextFormField(
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+              labelText: 'Correo electrónico',
+              suffixIcon: const Icon(Icons.email, color: Colors.white),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              labelStyle: const TextStyle(color: Colors.white),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            obscureText: true,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+              labelText: 'Contraseña',
+              suffixIcon: const Icon(Icons.lock, color: Colors.white),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              labelStyle: const TextStyle(color: Colors.white),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            obscureText: true,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+              labelText: 'Confirmar Contraseña',
+              suffixIcon: const Icon(Icons.lock, color: Colors.white),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+              labelStyle: const TextStyle(color: Colors.white),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
+              ),
+            ),
+          ),
+          const SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: () {
+              // Lógica para registrar usuario
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+            ),
+            child: const Text(
+              'Registrar',
               style: TextStyle(
-                fontSize: 24,
+                color: Colors.blueAccent,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
               ),
             ),
-            const SizedBox(height: 10),
-            const Text(
-              'Crea una cuenta para empezar',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white70,
-              ),
+          ),
+          const SizedBox(height: 20),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              '¿Ya tienes una cuenta? Inicia sesión',
+              style: TextStyle(color: Colors.white),
             ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text(
-                'Registrar Ahora',
-                style: TextStyle(color: Colors.blueAccent, fontSize: 16),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Regresa a la pantalla anterior (login)
-              },
-              child: const Text(
-                '¿Ya tienes una cuenta? Inicia sesión',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 50), // Espaciado final
+        ],
       ),
     );
   }
