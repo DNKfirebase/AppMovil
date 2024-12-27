@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "859369694162",
+    "project_id": "apprecetas-d9745",
+    "storage_bucket": "apprecetas-d9745.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859369694162:android:24f2229e7769a508355e0b",
+        "android_client_info": {
+          "package_name": "com.inacap.apprecetasd9745"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5_rq8zZSkPl87xFoHuhe7JwVGcSGz52A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

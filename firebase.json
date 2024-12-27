@@ -1,0 +1,39 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "apprecetas-d9745",
+          "appId": "1:859369694162:android:24f2229e7769a508355e0b",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "apprecetas-d9745",
+          "configurations": {
+            "android": "1:859369694162:android:24f2229e7769a508355e0b",
+            "ios": "1:859369694162:ios:ea413098ede248b1355e0b",
+            "macos": "1:859369694162:ios:ea413098ede248b1355e0b",
+            "web": "1:859369694162:web:1d75bd974c2973ab355e0b",
+            "windows": "1:859369694162:web:f16fc1ced8a1dcf9355e0b"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
